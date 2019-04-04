@@ -44,7 +44,7 @@ __STL_BEGIN_NAMESPACE
 #endif
 
 // __median (an extension, not present in the C++ standard).
-
+// 返回三个数的中位数
 template <class _Tp>
 inline const _Tp& __median(const _Tp& __a, const _Tp& __b, const _Tp& __c) {
   __STL_REQUIRES(_Tp, _LessThanComparable);
@@ -81,7 +81,7 @@ __median(const _Tp& __a, const _Tp& __b, const _Tp& __c, _Compare __comp) {
   else
     return __b;
 }
-
+// for_each
 // for_each.  Apply a function to every element of a range.
 template <class _InputIter, class _Function>
 _Function for_each(_InputIter __first, _InputIter __last, _Function __f) {
@@ -92,7 +92,7 @@ _Function for_each(_InputIter __first, _InputIter __last, _Function __f) {
 }
 
 // find and find_if.
-
+// find 找到第一个等于 value 的迭代器
 template <class _InputIter, class _Tp>
 inline _InputIter find(_InputIter __first, _InputIter __last,
                        const _Tp& __val,
@@ -213,7 +213,7 @@ inline _InputIter find_if(_InputIter __first, _InputIter __last,
 }
 
 // adjacent_find.
-
+// 在一个数组中寻找两个相邻的元素。如果相等，就返回这两个相等元素第一个元素的迭代器，不等的话，就返回v.end().
 template <class _ForwardIter>
 _ForwardIter adjacent_find(_ForwardIter __first, _ForwardIter __last) {
   __STL_REQUIRES(_ForwardIter, _ForwardIterator);
@@ -253,7 +253,7 @@ _ForwardIter adjacent_find(_ForwardIter __first, _ForwardIter __last,
 // whose return type is iterator_traits<_InputIter>::difference_type.  The
 // C++ standard only has the latter version, but the former, which was present
 // in the HP STL, is retained for backward compatibility.
-
+// 统计等于 value 的个数
 template <class _InputIter, class _Tp, class _Size>
 void count(_InputIter __first, _InputIter __last, const _Tp& __value,
            _Size& __n) {
@@ -310,7 +310,7 @@ count_if(_InputIter __first, _InputIter __last, _Predicate __pred) {
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 // search.
-
+// 在一个序列中搜索与另一序列匹配的子序列 返回子序列的起始位置
 template <class _ForwardIter1, class _ForwardIter2>
 _ForwardIter1 search(_ForwardIter1 __first1, _ForwardIter1 __last1,
                      _ForwardIter2 __first2, _ForwardIter2 __last2) 
@@ -340,22 +340,25 @@ _ForwardIter1 search(_ForwardIter1 __first1, _ForwardIter1 __last1,
   _ForwardIter1 __current = __first1;
 
   while (__first1 != __last1) {
+    // fist1 last1 之间找 是不是存在等于 first2 的迭代器的值
     __first1 = find(__first1, __last1, *__first2);
     if (__first1 == __last1)
       return __last1;
 
     __p = __p1;
     __current = __first1; 
+    // 找到了 只有一个元素 
     if (++__current == __last1)
       return __last1;
-
+    // 找到了，多个元素 返回 first1 起始位置
     while (*__current == *__p) {
       if (++__p == __last2)
         return __first1;
+      // 1 为空了， 表示序列断了，返回最后位置
       if (++__current == __last1)
         return __last1;
     }
-
+    // 下一次遍历
     ++__first1;
   }
   return __first1;
@@ -421,7 +424,7 @@ _ForwardIter1 search(_ForwardIter1 __first1, _ForwardIter1 __last1,
 }
 
 // search_n.  Search for __count consecutive copies of __val.
-
+// search_n() 算法会搜索给定元素的匹配项，它在序列中连续出现了给定的次数
 template <class _ForwardIter, class _Integer, class _Tp>
 _ForwardIter search_n(_ForwardIter __first, _ForwardIter __last,
                       _Integer __count, const _Tp& __val) {
@@ -487,10 +490,10 @@ _ForwardIter search_n(_ForwardIter __first, _ForwardIter __last,
     }
     return __last;
   }
-} 
+}
 
 // swap_ranges
-
+// 交换两个序列
 template <class _ForwardIter1, class _ForwardIter2>
 _ForwardIter2 swap_ranges(_ForwardIter1 __first1, _ForwardIter1 __last1,
                           _ForwardIter2 __first2) {
@@ -506,7 +509,7 @@ _ForwardIter2 swap_ranges(_ForwardIter1 __first1, _ForwardIter1 __last1,
 }
 
 // transform
-
+// 函数应用到序列的元素上，并将这个函数返回的值保存到另一个序列中，它返回的迭代器指向输出序列所保存的最后一个元素的下一个位置。
 template <class _InputIter, class _OutputIter, class _UnaryOperation>
 _OutputIter transform(_InputIter __first, _InputIter __last,
                       _OutputIter __result, _UnaryOperation __opr) {
@@ -532,7 +535,7 @@ _OutputIter transform(_InputIter1 __first1, _InputIter1 __last1,
 }
 
 // replace, replace_if, replace_copy, replace_copy_if
-
+// 代替
 template <class _ForwardIter, class _Tp>
 void replace(_ForwardIter __first, _ForwardIter __last,
              const _Tp& __old_value, const _Tp& __new_value) {
@@ -603,7 +606,7 @@ _OutputIter generate_n(_OutputIter __first, _Size __n, _Generator __gen) {
 }
 
 // remove, remove_if, remove_copy, remove_copy_if
-
+// 删除 等于 value 的元素
 template <class _InputIter, class _OutputIter, class _Tp>
 _OutputIter remove_copy(_InputIter __first, _InputIter __last,
                         _OutputIter __result, const _Tp& __value) {

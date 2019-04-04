@@ -40,6 +40,7 @@ struct pair {
 
   _T1 first;
   _T2 second;
+  // 构造函数
   pair() : first(_T1()), second(_T2()) {}
   pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {}
 
@@ -48,13 +49,13 @@ struct pair {
   pair(const pair<_U1, _U2>& __p) : first(__p.first), second(__p.second) {}
 #endif
 };
-
+// 相等
 template <class _T1, class _T2>
 inline bool operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
 { 
   return __x.first == __y.first && __x.second == __y.second; 
 }
-
+// 小于
 template <class _T1, class _T2>
 inline bool operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
 { 
@@ -85,7 +86,7 @@ inline bool operator>=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
 }
 
 #endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
+// 成员函数
 template <class _T1, class _T2>
 inline pair<_T1, _T2> make_pair(const _T1& __x, const _T2& __y)
 {

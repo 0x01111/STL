@@ -138,8 +138,11 @@ public:
   ~_Vector_base() { _M_deallocate(_M_start, _M_end_of_storage - _M_start); }
 
 protected:
+  // 起始指针
   _Tp* _M_start;
+  // 结束指针
   _Tp* _M_finish;
+  // 存储的个数
   _Tp* _M_end_of_storage;
 
   typedef simple_alloc<_Tp, _Alloc> _M_data_allocator;
@@ -160,6 +163,7 @@ class vector : protected _Vector_base<_Tp, _Alloc>
 
 private:
   typedef _Vector_base<_Tp, _Alloc> _Base;
+// 不同类型的成员变量
 public:
   typedef _Tp value_type;
   typedef value_type* pointer;
@@ -192,11 +196,11 @@ protected:
   using _Base::_M_finish;
   using _Base::_M_end_of_storage;
 #endif /* __STL_HAS_NAMESPACES */
-
+// 内部方法：插入
 protected:
   void _M_insert_aux(iterator __position, const _Tp& __x);
   void _M_insert_aux(iterator __position);
-
+// 公用方法
 public:
   iterator begin() { return _M_start; }
   const_iterator begin() const { return _M_start; }
@@ -235,7 +239,7 @@ public:
   const_reference at(size_type __n) const
     { _M_range_check(__n); return (*this)[__n]; }
 #endif /* __STL_THROW_RANGE_ERRORS */
-
+  // 构造函数
   explicit vector(const allocator_type& __a = allocator_type())
     : _Base(__a) {}
 
@@ -280,10 +284,11 @@ public:
     : _Base(__last - __first, __a) 
     { _M_finish = uninitialized_copy(__first, __last, _M_start); }
 #endif /* __STL_MEMBER_TEMPLATES */
-
+  // 析构函数
   ~vector() { destroy(_M_start, _M_finish); }
 
   vector<_Tp, _Alloc>& operator=(const vector<_Tp, _Alloc>& __x);
+  // 更新存储个数
   void reserve(size_type __n) {
     if (capacity() < __n) {
       const size_type __old_size = size();
@@ -329,12 +334,13 @@ public:
                      forward_iterator_tag); 
 
 #endif /* __STL_MEMBER_TEMPLATES */
-
+  // 返回第一个元素
   reference front() { return *begin(); }
   const_reference front() const { return *begin(); }
+  // 返回最后一个元素
   reference back() { return *(end() - 1); }
   const_reference back() const { return *(end() - 1); }
-
+  // 最后位置插入一个元素
   void push_back(const _Tp& __x) {
     if (_M_finish != _M_end_of_storage) {
       construct(_M_finish, __x);
@@ -351,19 +357,22 @@ public:
     else
       _M_insert_aux(end());
   }
+  // vector 交换
   void swap(vector<_Tp, _Alloc>& __x) {
     __STD::swap(_M_start, __x._M_start);
     __STD::swap(_M_finish, __x._M_finish);
     __STD::swap(_M_end_of_storage, __x._M_end_of_storage);
   }
-
+  // 插入元素
   iterator insert(iterator __position, const _Tp& __x) {
     size_type __n = __position - begin();
+    // 最后位置插入元素
     if (_M_finish != _M_end_of_storage && __position == end()) {
       construct(_M_finish, __x);
       ++_M_finish;
     }
     else
+      //__position 位置插入元素
       _M_insert_aux(__position, __x);
     return begin() + __n;
   }
@@ -400,16 +409,17 @@ public:
   void insert(iterator __position,
               const_iterator __first, const_iterator __last);
 #endif /* __STL_MEMBER_TEMPLATES */
-
+  // pos 位置插入 n 个元素 x 
   void insert (iterator __pos, size_type __n, const _Tp& __x)
     { _M_fill_insert(__pos, __n, __x); }
 
   void _M_fill_insert (iterator __pos, size_type __n, const _Tp& __x);
-
+  // 删除最后一个元素
   void pop_back() {
     --_M_finish;
     destroy(_M_finish);
   }
+  // 删除 pos 位置的元素
   iterator erase(iterator __position) {
     if (__position + 1 != end())
       copy(__position + 1, _M_finish, __position);
@@ -431,6 +441,7 @@ public:
       insert(end(), __new_size - size(), __x);
   }
   void resize(size_type __new_size) { resize(__new_size, _Tp()); }
+  // 清空
   void clear() { erase(begin(), end()); }
 
 protected:
@@ -494,7 +505,7 @@ protected:
 
 #endif /* __STL_MEMBER_TEMPLATES */
 };
-
+// 相等
 template <class _Tp, class _Alloc>
 inline bool 
 operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
@@ -502,7 +513,7 @@ operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
   return __x.size() == __y.size() &&
          equal(__x.begin(), __x.end(), __y.begin());
 }
-
+// 小于
 template <class _Tp, class _Alloc>
 inline bool 
 operator<(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
@@ -544,17 +555,20 @@ operator>=(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y) {
 }
 
 #endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
+// 赋值
 template <class _Tp, class _Alloc>
 vector<_Tp,_Alloc>& 
 vector<_Tp,_Alloc>::operator=(const vector<_Tp, _Alloc>& __x)
 {
   if (&__x != this) {
     const size_type __xlen = __x.size();
-    if (__xlen > capacity()) {
+    if (__xlen > capacity()) {  // 存储空间不够用
+      // 临时空间
       iterator __tmp = _M_allocate_and_copy(__xlen, __x.begin(), __x.end());
+      // 销毁、释放空间
       destroy(_M_start, _M_finish);
       _M_deallocate(_M_start, _M_end_of_storage - _M_start);
+      // 重新赋值
       _M_start = __tmp;
       _M_end_of_storage = _M_start + __xlen;
     }
@@ -566,6 +580,7 @@ vector<_Tp,_Alloc>::operator=(const vector<_Tp, _Alloc>& __x)
       copy(__x.begin(), __x.begin() + size(), _M_start);
       uninitialized_copy(__x.begin() + size(), __x.end(), _M_finish);
     }
+    // 结束指针更新
     _M_finish = _M_start + __xlen;
   }
   return *this;
@@ -574,12 +589,15 @@ vector<_Tp,_Alloc>::operator=(const vector<_Tp, _Alloc>& __x)
 template <class _Tp, class _Alloc>
 void vector<_Tp, _Alloc>::_M_fill_assign(size_t __n, const value_type& __val) 
 {
+  // 最大存储空间够用
   if (__n > capacity()) {
     vector<_Tp, _Alloc> __tmp(__n, __val, get_allocator());
     __tmp.swap(*this);
   }
+  // 已经使用的空间小于 n
   else if (__n > size()) {
     fill(begin(), end(), __val);
+    // 更新_M_finish
     _M_finish = uninitialized_fill_n(_M_finish, __n - size(), __val);
   }
   else

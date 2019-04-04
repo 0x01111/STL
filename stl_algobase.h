@@ -67,7 +67,7 @@
 __STL_BEGIN_NAMESPACE
 
 // swap and iter_swap
-
+// 迭代器两个元素交换
 template <class _ForwardIter1, class _ForwardIter2, class _Tp>
 inline void __iter_swap(_ForwardIter1 __a, _ForwardIter2 __b, _Tp*) {
   _Tp __tmp = *__a;
@@ -85,7 +85,7 @@ inline void iter_swap(_ForwardIter1 __a, _ForwardIter2 __b) {
                     typename iterator_traits<_ForwardIter1>::value_type);
   __iter_swap(__a, __b, __VALUE_TYPE(__a));
 }
-
+// 普通交换
 template <class _Tp>
 inline void swap(_Tp& __a, _Tp& __b) {
   __STL_REQUIRES(_Tp, _Assignable);
@@ -101,13 +101,13 @@ inline void swap(_Tp& __a, _Tp& __b) {
 
 #undef min
 #undef max
-
+// 最小值
 template <class _Tp>
 inline const _Tp& min(const _Tp& __a, const _Tp& __b) {
   __STL_REQUIRES(_Tp, _LessThanComparable);
   return __b < __a ? __b : __a;
 }
-
+// 最大值
 template <class _Tp>
 inline const _Tp& max(const _Tp& __a, const _Tp& __b) {
   __STL_REQUIRES(_Tp, _LessThanComparable);
@@ -134,7 +134,7 @@ inline const _Tp& max(const _Tp& __a, const _Tp& __b, _Compare __comp) {
 // because the input and output ranges are permitted to overlap.)
 // (2) If we're using random access iterators, then write the loop as
 // a for loop with an explicit count.
-
+// first -- last copy 到 result
 template <class _InputIter, class _OutputIter, class _Distance>
 inline _OutputIter __copy(_InputIter __first, _InputIter __last,
                           _OutputIter __result,
@@ -144,7 +144,7 @@ inline _OutputIter __copy(_InputIter __first, _InputIter __last,
     *__result = *__first;
   return __result;
 }
-
+// first -- last copy 到 result
 template <class _RandomAccessIter, class _OutputIter, class _Distance>
 inline _OutputIter
 __copy(_RandomAccessIter __first, _RandomAccessIter __last,
@@ -303,7 +303,7 @@ __SGI_STL_DECLARE_COPY_TRIVIAL(long double)
 
 //--------------------------------------------------
 // copy_backward
-
+// 反向 copy 
 template <class _BidirectionalIter1, class _BidirectionalIter2, 
           class _Distance>
 inline _BidirectionalIter2 __copy_backward(_BidirectionalIter1 __first, 
@@ -437,14 +437,14 @@ copy_n(_InputIter __first, _Size __count, _OutputIter __result) {
 //--------------------------------------------------
 // fill and fill_n
 
-
+// 使用 value 填满 
 template <class _ForwardIter, class _Tp>
 void fill(_ForwardIter __first, _ForwardIter __last, const _Tp& __value) {
   __STL_REQUIRES(_ForwardIter, _Mutable_ForwardIterator);
   for ( ; __first != __last; ++__first)
     *__first = __value;
 }
-
+// 使用  n  个 value 填充 
 template <class _OutputIter, class _Size, class _Tp>
 _OutputIter fill_n(_OutputIter __first, _Size __n, const _Tp& __value) {
   __STL_REQUIRES(_OutputIter, _OutputIterator);
@@ -498,7 +498,7 @@ inline char* fill_n(char* __first, _Size __n, const char& __c) {
 
 //--------------------------------------------------
 // equal and mismatch
-
+// 两个 iter 比较，返回第一个不相等的元素
 template <class _InputIter1, class _InputIter2>
 pair<_InputIter1, _InputIter2> mismatch(_InputIter1 __first1,
                                         _InputIter1 __last1,
@@ -529,7 +529,7 @@ pair<_InputIter1, _InputIter2> mismatch(_InputIter1 __first1,
   }
   return pair<_InputIter1, _InputIter2>(__first1, __first2);
 }
-
+// 两个 list 内部元素是不是相等
 template <class _InputIter1, class _InputIter2>
 inline bool equal(_InputIter1 __first1, _InputIter1 __last1,
                   _InputIter2 __first2) {
@@ -559,7 +559,7 @@ inline bool equal(_InputIter1 __first1, _InputIter1 __last1,
 //--------------------------------------------------
 // lexicographical_compare and lexicographical_compare_3way.
 // (the latter is not part of the C++ standard.)
-
+// 用于按字典序比较两个序列
 template <class _InputIter1, class _InputIter2>
 bool lexicographical_compare(_InputIter1 __first1, _InputIter1 __last1,
                              _InputIter2 __first2, _InputIter2 __last2) {
