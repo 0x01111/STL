@@ -41,3 +41,52 @@ inline pair<_T1, _T2> make_pair(const _T1& __x, const _T2& __y)
 ```
 make_pair<T1，T2> 函数模板是一个辅助函数，可以生成并返回一个 pair<T1，T2> 对象
 
+#### operator操作
+相等：判断逻辑是两个 pair 的 first 、second 都要相等
+```cpp
+template <class _T1, class _T2>
+inline bool operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+{ 
+  return __x.first == __y.first && __x.second == __y.second; 
+}
+```
+
+小于： __x.first < __y.first  或者 ( __x.first < __y.first && _x.second < __y.second )
+
+```cpp
+template <class _T1, class _T2>
+inline bool operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+{ 
+  return __x.first < __y.first || 
+         (!(__y.first < __x.first) && __x.second < __y.second); 
+}
+```
+不相等：连个对象不等
+```cpp
+template <class _T1, class _T2>
+inline bool operator!=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
+  return !(__x == __y);
+}
+```
+大于： 
+```cpp
+template <class _T1, class _T2>
+inline bool operator>(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
+  return __y < __x;
+}
+```
+小于等于
+```cpp
+template <class _T1, class _T2>
+inline bool operator<=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
+  return !(__y < __x);
+}
+```
+大于等于
+```cpp
+template <class _T1, class _T2>
+inline bool operator>=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
+  return !(__x < __y);
+}
+
+```
