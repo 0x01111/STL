@@ -239,3 +239,16 @@ inline bool operator>=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
 }
 
 ```
+## multimap
+multimap 容器保存的是有序的键/值对，但它可以保存重复的元素。multimap 中会出现具有相同键的元素序列，它们会被添加到容器中。multimap 和 map 有相同范围的构造函数，默认的比较键的函数是 less<K>()。
+既然可以有重复，插入元素时候一定存在差异的
+```cpp
+    multimap(const value_type* __first, const value_type* __last)
+    : _M_t(_Compare(), allocator_type())
+    { _M_t.insert_equal(__first, __last); }
+  multimap(const value_type* __first, const value_type* __last,
+           const _Compare& __comp,
+           const allocator_type& __a = allocator_type())
+    : _M_t(__comp, __a) { _M_t.insert_equal(__first, __last); }
+  ```
+  可以看出map 的插入是 insert_unique 表示唯一插入， multimap 的插入是 insert_equal  表示可以相等插入
