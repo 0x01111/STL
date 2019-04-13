@@ -646,11 +646,12 @@ vector<_Tp, _Alloc>::_M_assign_aux(_ForwardIter __first, _ForwardIter __last,
 }
 
 #endif /* __STL_MEMBER_TEMPLATES */
-
+// pos 位置插入 x 
 template <class _Tp, class _Alloc>
 void 
 vector<_Tp, _Alloc>::_M_insert_aux(iterator __position, const _Tp& __x)
 {
+  // finish 之前
   if (_M_finish != _M_end_of_storage) {
     construct(_M_finish, *(_M_finish - 1));
     ++_M_finish;
@@ -709,16 +710,20 @@ vector<_Tp, _Alloc>::_M_insert_aux(iterator __position)
     _M_end_of_storage = __new_start + __len;
   }
 }
-
+//pos 位置插入 n 个 值为 x 的元素
 template <class _Tp, class _Alloc>
 void vector<_Tp, _Alloc>::_M_fill_insert(iterator __position, size_type __n, 
                                          const _Tp& __x)
 {
+  // 初始空间不为0 
   if (__n != 0) {
+    // 剩余空间够不够用
     if (size_type(_M_end_of_storage - _M_finish) >= __n) {
+      // 够用
       _Tp __x_copy = __x;
       const size_type __elems_after = _M_finish - __position;
       iterator __old_finish = _M_finish;
+      // 插入位置在 finish 之前，并且 有 n 个位置可以插入
       if (__elems_after > __n) {
         uninitialized_copy(_M_finish - __n, _M_finish, _M_finish);
         _M_finish += __n;
@@ -734,6 +739,7 @@ void vector<_Tp, _Alloc>::_M_fill_insert(iterator __position, size_type __n,
       }
     }
     else {
+      // 不够用，直接申请空间
       const size_type __old_size = size();        
       const size_type __len = __old_size + max(__old_size, __n);
       iterator __new_start = _M_allocate(__len);
