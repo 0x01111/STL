@@ -145,7 +145,7 @@ vector<_Tp,_Alloc>::operator=(const vector<_Tp, _Alloc>& __x)
 ```
 ## insert
 
-```
+```cpp
 //pos 位置插入 n 个 值为 x 的元素
 template <class _Tp, class _Alloc>
 void vector<_Tp, _Alloc>::_M_fill_insert(iterator __position, size_type __n, 
