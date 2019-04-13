@@ -101,13 +101,15 @@ public:
   typedef typename _Rep_type::allocator_type allocator_type;
 
   // allocation/deallocation
-
+// 午参构造函数
   map() : _M_t(_Compare(), allocator_type()) {}
+  // 自定义比较函数
   explicit map(const _Compare& __comp,
                const allocator_type& __a = allocator_type())
     : _M_t(__comp, __a) {}
 
 #ifdef __STL_MEMBER_TEMPLATES
+  // 迭代器内的元素插入到 map
   template <class _InputIterator>
   map(_InputIterator __first, _InputIterator __last)
     : _M_t(_Compare(), allocator_type())
@@ -136,7 +138,7 @@ public:
     : _M_t(__comp, __a) { _M_t.insert_unique(__first, __last); }
 
 #endif /* __STL_MEMBER_TEMPLATES */
-
+  // 使用另外一个 map 对其初始化
   map(const map<_Key,_Tp,_Compare,_Alloc>& __x) : _M_t(__x._M_t) {}
   map<_Key,_Tp,_Compare,_Alloc>&
   operator=(const map<_Key, _Tp, _Compare, _Alloc>& __x)
